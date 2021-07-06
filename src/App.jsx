@@ -2,17 +2,17 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import React from 'react';
 
 
-import { Register } from '../src/pages/Register';
+import { CreateRegister } from '../src/pages/CreateRegister';
 import { Home } from '../src/pages/Home';
-import { Copi } from '../src/pages/Copi';
+import { Register } from '../src/pages/Register';
 
 function App() {
   return (
     <BrowserRouter>
       <Switch>
         <Route path="/" exact component={Home} />
-        <Route path="/register" exect component={Register} />
-        <Route path="/copi"   component={Copi} />
+        <Route path="/page/register" exect component={CreateRegister} />
+        <Route path="/register"   component={Register} />
       </Switch>
     </BrowserRouter>
   )

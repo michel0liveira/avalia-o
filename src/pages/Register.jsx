@@ -1,50 +1,59 @@
-import { useState } from "react";
+import { useEffect, useState } from "react"
+import {db} from "../services/firebase"
+import '../styles/register.scss'
 
 
 export function Register() {
 
-    const [newRegister, setNewResginter] = useState({ })
+    const [regit, setRegist] = useState([])
 
-    const handleRegister = (event) => {
-        const {name, value} = event.target
-        setNewResginter({...newRegister, [name]: value})
+    const getRegister = () => {
+        db.collection("newRegister").onSnapshot((querySnapshot) => {
+            const docs = [];
+            querySnapshot.forEach((doc) => {
+                docs.push({...doc.data(), id: doc.id})
+            })
+            setRegist(docs)
+        })
     }
-    
-    
-    
-    function handleCreateRegister(event) {
-        event.preventDefault()
-        const formData = new FormData(event.target)
-        const data = Object.fromEntries(formData) 
 
-    }
-    
-   
-    
 
+    useEffect(() => {
+        getRegister();
+    }, [])
+
+    
+    //replica os dados do database em tela
     return(
-        <div>
-            <header className="header">
-                <h1> Dados do colaborador </h1>
-                <img className="photo" src="#" alt="Foto do colaborador" />
-                <p> Colaborador esta ativo <input name="active" type="checkbox" /></p>
-            </header>
-            <div>
-                <form onSubmit={handleCreateRegister}>
-                    <input onChange={handleRegister}name="name" placeholder="Nome" type="text" />
-                    <input onChange={handleRegister}name="email" placeholder="Email" type="text" />
-                    <input onChange={handleRegister}name="hiring" placeholder="Data de contratação" type="text" />
-                    <input onChange={handleRegister}name="cpf" placeholder="Cpf" type="text" />
-                    <p>Enderço</p>
-                    <input onChange={handleRegister}name="district" placeholder="Bairro" type="text" />
-                    <input onChange={handleRegister}name="street" placeholder="Rua" type="text" />
-                    <input onChange={handleRegister}name="cep" placeholder="CEP" type="text" />
-                    <input onChange={handleRegister}name="state" placeholder="Estado" type="text" />
-                    <input onChange={handleRegister}name="city" placeholder="Cidade" type="text" />
-
-                    <button type="submit">Enviar</button>
-                </form>
-            </div>
+    <div id="register">
+        {/* <button onClick={getRegister}>Rescaregar</button> */}
+        <div >
+          {regit.map(res => {
+             return (
+                <div className="card" key={res.id} >
+                    <h2>{`Colaborador ${res.name}`}</h2>
+                <div >
+                    <p>{`Nome: ${res.name}`}</p>
+                    <p>{`Email: ${res.email}`}</p>
+                    <p>{`Contratação: ${res.hiring}`}</p>
+                    <p>{`CPF: ${res.cpf}`}</p>                    
+                </div>
+                <h3>Enderço</h3>
+                <div>
+                <p>{`Bairro: ${res.district}`}</p>
+                    <p>{`Rua: ${res.street}`}</p>
+                    <p>{`CEP: ${res.cep}`}</p>
+                    <p>{`Estado ${res.state}`}</p>
+                    <p>{`Cidades ${res.city}`}</p>
+                </div>
+              </div>
+             )
+             
+          })}
         </div>
+    </div>
+       
     )
+    
+
 }
